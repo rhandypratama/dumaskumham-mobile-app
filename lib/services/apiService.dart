@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:path/path.dart';
+import 'package:async/async.dart';
 // import 'dart:io';
 import 'package:dumaskumham/model/pengaduanModel.dart';
 import 'package:http/http.dart' as http;
@@ -24,11 +26,25 @@ class ApiService {
   //   // }
   // }
 
-  Future<http.Response> kirimLaporan(PengaduanModel data) async {
+  Future<http.Response> kirimLaporan(data) async {
+    // var map = new Map<String, dynamic>();
+    
+    // map["nama_pelapor"] = namaPelapor; 
+    // map["jenis_laporan"] = jenisLaporan; 
+    // map["nip_nik"] = nipNik; 
+    // map["email"] = email;
+    // map["no_ponsel"] = noPonsel;
+    // map["alamat_rumah"] = alamatRumah;
+    // map["unit_dilaporkan"] = unitDilaporkan;
+    // map["jenis_pelanggaran"] = jenisPelanggaran;
+    // map["deskripsi_pelanggaran"] = deskripsiPelanggaran;
+    // map["lampiran"] = lampiran;
+    // map["deskripsi_lampiran"] = deskripsiLampiran;
     var response = await http.post(
       "$apiUrl/api/laporan/create",
       headers: {"x-api-key": apiKey},
-      body: json.encode(data),
+      // body: json.encode(data),
+      body: data,
     );
     return response;
   }
@@ -82,5 +98,46 @@ class ApiService {
     print(response.statusCode);
     print(response.request);
     return response;
+  }
+
+  kirimLaporan2(
+    String namaPelapor,
+    String jenisLaporan,
+    String nipNik,
+    String email,
+    String noPonsel,
+    String alamatRumah,
+    String unitDilaporkan,
+    String jenisPelanggaran,
+    String deskripsiPelanggaran,
+    File lampiran,
+    String deskripsiLampiran
+  ) async {    
+    var stream = new http.ByteStream(DelegatingStream.typed(lampiran.openRead()));
+    var length = await lampiran.length();
+    var uri = Uri.parse("$apiUrl/api/laporan/create");
+
+    var request = new http.MultipartRequest("POST", uri);
+    request.headers['x-api-key'] = apiKey;
+
+    var multipartFile = new http.MultipartFile('lampiran', stream, length, filename: basename(lampiran.path));
+    request.files.add(multipartFile);
+    request.fields['nama_pelapor'] = namaPelapor;
+    request.fields['jenis_laporan'] = jenisLaporan;
+    request.fields['nip_nik'] = nipNik;
+    request.fields['no_ponsel'] = noPonsel;
+    request.fields['email'] = email;
+    request.fields['alamat_rumah'] = alamatRumah;
+    request.fields['unit_dilaporkan'] = unitDilaporkan;
+    request.fields['jenis_pelanggaran'] = jenisPelanggaran;
+    request.fields['deskripsi_pelanggaran'] = deskripsiPelanggaran;
+    request.fields['deskripsi_lampiran'] = deskripsiLampiran;
+
+    var response = await request.send();
+    return response;
+    // response.stream.transform(utf8.decoder).listen((value) {
+    //   // print(json.decode(value));
+    //   print(value);
+    // });
   }
 }

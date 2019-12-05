@@ -31,12 +31,10 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
       try {
         if (_multiPick) {
           _path = null;
-          _paths = await FilePicker.getMultiFilePath(
-              type: _pickingType, fileExtension: _extension);
+          _paths = await FilePicker.getMultiFilePath(type: _pickingType, fileExtension: _extension);
         } else {
           _paths = null;
-          _path = await FilePicker.getFilePath(
-              type: _pickingType, fileExtension: _extension);
+          _path = await FilePicker.getFilePath(type: _pickingType, fileExtension: _extension);
         }
       } on PlatformException catch (e) {
         print("Unsupported operation" + e.toString());
@@ -44,9 +42,7 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
       if (!mounted) return;
       setState(() {
         _loadingPath = false;
-        _fileName = _path != null
-            ? _path.split('/').last
-            : _paths != null ? _paths.keys.toString() : '...';
+        _fileName = _path != null ? _path.split('/').last : _paths != null ? _paths.keys.toString() : '...';
       });
     }
   }

@@ -8,6 +8,9 @@ import 'package:dumaskumham/ui/terimaKasih.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter/services.dart';
+import 'package:file_picker/file_picker.dart';
+
 class Pengaduan extends StatefulWidget {
   @override
   _PengaduanState createState() => _PengaduanState();
@@ -60,6 +63,38 @@ class _PengaduanState extends State<Pengaduan> {
     //     fullscreenDialog: true,
     //   ),
     // );
+  }
+
+  String _fileName;
+  String _path;
+  Map<String, String> _paths;
+  String _extension;
+  bool _loadingPath = false;
+  bool _multiPick = false;
+  bool _hasValidMime = false;
+  FileType _pickingType;
+  // TextEditingController _controller = new TextEditingController();
+
+  void _openFileExplorer() async {
+    if (_pickingType != FileType.CUSTOM || _hasValidMime) {
+      setState(() => _loadingPath = true);
+      try {
+        if (_multiPick) {
+          _path = null;
+          _paths = await FilePicker.getMultiFilePath(type: _pickingType, fileExtension: _extension);
+        } else {
+          _paths = null;
+          _path = await FilePicker.getFilePath(type: _pickingType, fileExtension: _extension);
+        }
+      } on PlatformException catch (e) {
+        print("Unsupported operation" + e.toString());
+      }
+      if (!mounted) return;
+      setState(() {
+        _loadingPath = false;
+        _fileName = _path != null ? _path.split('/').last : _paths != null ? _paths.keys.toString() : '...';
+      });
+    }
   }
 
   @override
@@ -183,6 +218,45 @@ class _PengaduanState extends State<Pengaduan> {
                 ),
               ),
               SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: new RaisedButton(
+                  onPressed: () => _openFileExplorer(),
+                  child: new Text("File Lampiran"),
+                ),
+              ),
+              Builder(
+                builder: (BuildContext context) => _loadingPath
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: const CircularProgressIndicator()
+                    )
+                    : _path != null || _paths != null
+                        ? new Container(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            height: MediaQuery.of(context).size.height * 0.10,
+                            child: new Scrollbar(
+                              child: new ListView.separated(
+                              itemCount: _paths != null && _paths.isNotEmpty ? _paths.length : 1,
+                              itemBuilder: (BuildContext context, int index) {
+                                final bool isMultiPath = _paths != null && _paths.isNotEmpty;
+                                final String name = 'File ${index+1} => ' +
+                                  (isMultiPath ? _paths.keys.toList()[index] : _fileName ?? '...');
+                                final path = 'Path ${index+1} => ' + 
+                                  (isMultiPath ? _paths.values.toList()[index].toString() : _path);
+                                return new ListTile(
+                                  title: new Text(
+                                    name,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  subtitle: new Text(path, style: TextStyle(color: Colors.white),),
+                                );
+                              },
+                              separatorBuilder: (BuildContext context, int index) => new Divider(),
+                            )),
+                          )
+                        : new Container(),
+              ),
               TextField(
                 controller: controllerDescLampiran,
                 keyboardType: TextInputType.text,
@@ -261,6 +335,15 @@ class _PengaduanState extends State<Pengaduan> {
                             );
                           }
                         );
+                      } else if (_path == null) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Text('File lampiran harus diisi'),
+                            );
+                          }
+                        );
                       } else if (controllerDescLampiran.text.trim().isEmpty) {
                         showDialog(
                           context: context,
@@ -276,61 +359,100 @@ class _PengaduanState extends State<Pengaduan> {
                         String unitDilaporkan = controllerUnit.text.trim();
                         String jenisPelanggaran = _btn2SelectedVal;
                         String deskripsiPelanggaran = controllerDescPelanggaran.text.trim();
-                        File lampiran;
+                        File lampiran = File(_path);
                         String deskripsiLampiran = controllerDescLampiran.text.trim();
-                        PengaduanModel dataPengaduan = PengaduanModel(
-                          namaPelapor: nama.toString(), 
-                          jenisLaporan: jenisLaporan.toString(),
-                          nipNik: nip.toString(),
-                          email: email.toString(),
-                          noPonsel: noPonsel.toString(),
-                          alamatRumah: alamat.toString(),
-                          unitDilaporkan: unitDilaporkan.toString(),
-                          jenisPelanggaran: jenisPelanggaran.toString(),
-                          deskripsiPelanggaran: deskripsiPelanggaran.toString(),
-                          // lampiran: lampiran.path.split('/').last,
-                          deskripsiLampiran: deskripsiLampiran.toString(),
-                        );
+                        // PengaduanModel dataPengaduan = PengaduanModel(
+                        //   namaPelapor: nama.toString(), 
+                        //   jenisLaporan: jenisLaporan.toString(),
+                        //   nipNik: nip.toString(),
+                        //   email: email.toString(),
+                        //   noPonsel: noPonsel.toString(),
+                        //   alamatRumah: alamat.toString(),
+                        //   unitDilaporkan: unitDilaporkan.toString(),
+                        //   jenisPelanggaran: jenisPelanggaran.toString(),
+                        //   deskripsiPelanggaran: deskripsiPelanggaran.toString(),
+                        //   deskripsiLampiran: deskripsiLampiran.toString(),
+                        // );
+
+                        // var map = new Map<String, dynamic>();
+                        // map["nama_pelapor"] = nama.toString(); 
+                        // map["jenis_laporan"] = jenisLaporan.toString(); 
+                        // map["nip_nik"] = nip.toString(); 
+                        // map["email"] = email.toString();
+                        // map["no_ponsel"] = noPonsel.toString();
+                        // map["alamat_rumah"] = alamat.toString();
+                        // map["unit_dilaporkan"] = unitDilaporkan.toString();
+                        // map["jenis_pelanggaran"] = jenisPelanggaran.toString();
+                        // map["deskripsi_pelanggaran"] = deskripsiPelanggaran.toString();
+                        // map["lampiran"] = lampiran;
+                        // map["deskripsi_lampiran"] = deskripsiLampiran.toString();
 
                         // print(dataPengaduan);
                         // _api.kirimLaporan1(dataPengaduan).then((res) {
                         //   // print(res.toString());
                         // });
                         
-                        _api.kirimLaporan(dataPengaduan).then((res) {
-                          setState(() => _isLoading = false);
-                          // print(dataPengaduan);
-                          print(res.body);
-                          print(json.decode(res.body));
-                          if (res.statusCode == 200) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<Null>(
-                                builder: (BuildContext context) {
-                                  return TerimaKasih();
-                                },
-                                fullscreenDialog: true,
-                              ),
-                            );
-                          } else { 
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text(json.decode(res.body)['message']),
-                                  content: Text('Terjadi kesalahan saat pengiriman laporan pengaduan. Silahkan coba kembali beberapa saat lagi.'),
-                                  // content: Text('Sukses buat laporan'),
-                                  actions: <Widget>[
-                                    new FlatButton(
-                                      child: new Text("TUTUP"),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              }
-                            );
-                          }
+                        // _api.kirimLaporan(map).then((res) {
+                        //   setState(() => _isLoading = false);
+                        //   // print(dataPengaduan);
+                        //   print(res.body);
+                        //   print(json.decode(res.body));
+                        //   if (res.statusCode == 200) {
+                        //     Navigator.of(context).push(
+                        //       MaterialPageRoute<Null>(
+                        //         builder: (BuildContext context) {
+                        //           return TerimaKasih();
+                        //         },
+                        //         fullscreenDialog: true,
+                        //       ),
+                        //     );
+                        //   } else { 
+                        //     showDialog(
+                        //       context: context,
+                        //       builder: (context) {
+                        //         return AlertDialog(
+                        //           title: Text(json.decode(res.body)['message']),
+                        //           content: Text('Terjadi kesalahan saat pengiriman laporan pengaduan. Silahkan coba kembali beberapa saat lagi.'),
+                        //           // content: Text('Sukses buat laporan'),
+                        //           actions: <Widget>[
+                        //             new FlatButton(
+                        //               child: new Text("TUTUP"),
+                        //               onPressed: () {
+                        //                 Navigator.of(context).pop();
+                        //               },
+                        //             ),
+                        //           ],
+                        //         );
+                        //       }
+                        //     );
+                        //   }
+                        // });
+
+                        _api.kirimLaporan2(
+                          nama.toString(), 
+                          jenisLaporan.toString(), 
+                          nip.toString(), 
+                          email.toString(), 
+                          noPonsel.toString(), 
+                          alamat.toString(), 
+                          unitDilaporkan.toString(), 
+                          jenisPelanggaran.toString(), 
+                          deskripsiPelanggaran.toString(), 
+                          lampiran, 
+                          deskripsiLampiran.toString())
+                          .then((res) {
+                            res.stream.transform(utf8.decoder).listen((value) async {
+                              // var b = await json.decode(value);
+                              print(value);
+                              Navigator.of(context).push(
+                                MaterialPageRoute<Null>(
+                                  builder: (BuildContext context) {
+                                    return TerimaKasih();
+                                  },
+                                  fullscreenDialog: true,
+                                ),
+                              );
+                            });
                         });
 
                       }

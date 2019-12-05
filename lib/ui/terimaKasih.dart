@@ -34,10 +34,11 @@ class _TerimaKasihState extends State<TerimaKasih> {
             SizedBox(height: 50),
             Center(
               child: Text("Laporan anda akan segera kami proses. Tindak lanjut laporan akan kami kirimkan ke email anda. Mohon untuk periksa email anda secara berkala.",
+              // child: Text("Laporan anda akan .",
                 style: TextStyle(
                   color: Colors.white,
                   // fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 16,
                 )),
             ),
             SizedBox(height: 50,),
