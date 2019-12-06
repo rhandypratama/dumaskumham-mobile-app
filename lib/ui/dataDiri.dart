@@ -71,6 +71,38 @@ class _DataDiriState extends State<DataDiri> {
     );
   }
 
+  Future<void> _showAlert(String message) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+            // backgroundColor: Colors.black87,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(new Radius.circular(8.0))),
+            title: Text('Data Pelapor', style: TextStyle(color: Colors.black),),
+            // title: Text('Data Pelapor', style: TextStyle(color: Colors.white),),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(message, style: TextStyle(color: Colors.black),),
+                  // Text(message, style: TextStyle(color: Colors.white),),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('TUTUP', style: TextStyle(color: Colors.teal),),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     controllerNama.dispose();
@@ -105,18 +137,18 @@ class _DataDiriState extends State<DataDiri> {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 24,
+                      fontSize: 20,
                     )),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               TextField(
                 controller: controllerNama,
                 keyboardType: TextInputType.text,
-                
+
                 decoration: InputDecoration(
                   labelText: "Nama",
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 4.0),
+                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 2.0),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -124,7 +156,7 @@ class _DataDiriState extends State<DataDiri> {
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   // hintText: "",
-                  labelStyle: TextStyle(color: Colors.black),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 13.0),
                   filled: true,
                   fillColor: Colors.white,
                   
@@ -143,7 +175,7 @@ class _DataDiriState extends State<DataDiri> {
                 ),
                 child: DropdownButton(
                   value: _btn2SelectedVal,
-                  hint: Text('Klasifikasi Pelapor'),
+                  hint: Text('Jenis Laporan', style: TextStyle(fontSize: 13.0),),
                   onChanged: ((String newValue) {
                     setState(() {
                       _btn2SelectedVal = newValue;
@@ -155,7 +187,7 @@ class _DataDiriState extends State<DataDiri> {
                           (MapEntry<String, String> e) =>
                               DropdownMenuItem<String>(
                                 value: e.key,
-                                child: Text(e.value),
+                                child: Text(e.value, style: TextStyle(fontSize: 13.0),),
                               ))
                       .toList(),
                   // style: TextStyle(color: Colors.white),
@@ -177,7 +209,7 @@ class _DataDiriState extends State<DataDiri> {
                 decoration: InputDecoration(
                   labelText: "NIP / NIK",
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 4.0),
+                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 2.0),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -185,7 +217,7 @@ class _DataDiriState extends State<DataDiri> {
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   // hintText: "",
-                  labelStyle: TextStyle(color: Colors.black),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 13.0),
                   filled: true,
                   fillColor: Colors.white,
                 ),
@@ -197,7 +229,7 @@ class _DataDiriState extends State<DataDiri> {
                 decoration: InputDecoration(
                   labelText: "Email",
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 4.0),
+                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 2.0),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -205,7 +237,7 @@ class _DataDiriState extends State<DataDiri> {
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   // hintText: "",
-                  labelStyle: TextStyle(color: Colors.black),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 13.0),
                   filled: true,
                   fillColor: Colors.white,
                   
@@ -218,7 +250,7 @@ class _DataDiriState extends State<DataDiri> {
                 decoration: InputDecoration(
                   labelText: "Nomor Ponsel",
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 4.0),
+                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 2.0),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -226,7 +258,7 @@ class _DataDiriState extends State<DataDiri> {
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   // hintText: "",
-                  labelStyle: TextStyle(color: Colors.black),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 13.0),
                   filled: true,
                   fillColor: Colors.white,
                   
@@ -240,7 +272,7 @@ class _DataDiriState extends State<DataDiri> {
                 decoration: InputDecoration(
                   labelText: "Alamat Rumah",
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 4.0),
+                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 2.0),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -248,18 +280,18 @@ class _DataDiriState extends State<DataDiri> {
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   // hintText: "",
-                  labelStyle: TextStyle(color: Colors.black),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 13.0),
                   filled: true,
                   fillColor: Colors.white,
                   
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
 
               // Wrap(
               ButtonTheme(
                 minWidth: MediaQuery.of(context).size.width,
-                height: 50,
+                height: 40,
                 child: RaisedButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(4.0),
@@ -271,7 +303,7 @@ class _DataDiriState extends State<DataDiri> {
                           // fontFamily: 'Montserrat',
                           color: Colors.white,
                           // fontWeight: FontWeight.bold,
-                          fontSize: 20.0),
+                          fontSize: 18.0),
                     ),
                     color: Color.fromRGBO(90, 186, 146, 1),
                     onPressed: () async {
@@ -287,59 +319,17 @@ class _DataDiriState extends State<DataDiri> {
                       // );
 
                       if (controllerNama.text.trim().isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('Nama tidak boleh kosong'),
-                            );
-                          }
-                        );
+                        _showAlert('Nama harus diisi');
                       } else if (_btn2SelectedVal == null) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('Jenis laporan harus dipilih'),
-                            );
-                          }
-                        );
+                        _showAlert('Jenis laporan harus dipilih salah satu');
                       } else if (controllerNip.text.trim().isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('NIP / NIK harus diisi'),
-                            );
-                          }
-                        );
+                        _showAlert('NIP / NIK harus diisi');
                       } else if (controllerEmail.text.trim().isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('Email harus diisi'),
-                            );
-                          }
-                        );
+                        _showAlert('Email harus diisi');
                       } else if (controllerNoPonsel.text.trim().isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('Nomor ponsel harus diisi'),
-                            );
-                          }
-                        );
+                        _showAlert('Nomor ponsel harus diisi');
                       } else if (controllerAlamat.text.trim().isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('Alamat rumah harus diisi'),
-                            );
-                          }
-                        );
+                        _showAlert('Alamat rumah harus diisi');
                       } else {
                         // print(_btn2SelectedVal);
                         // _masuk(

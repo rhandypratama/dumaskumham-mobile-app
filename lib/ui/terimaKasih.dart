@@ -28,24 +28,24 @@ class _TerimaKasihState extends State<TerimaKasih> {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 24,
+                  fontSize: 20,
                 )),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 30),
             Center(
               child: Text("Laporan anda akan segera kami proses. Tindak lanjut laporan akan kami kirimkan ke email anda. Mohon untuk periksa email anda secara berkala.",
               // child: Text("Laporan anda akan .",
                 style: TextStyle(
                   color: Colors.white,
                   // fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 14,
                 )),
             ),
-            SizedBox(height: 50,),
+            SizedBox(height: 30,),
             // Wrap(
             ButtonTheme(
               minWidth: MediaQuery.of(context).size.width,
-              height: 50,
+              height: 40,
               child: RaisedButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(4.0),
@@ -58,7 +58,7 @@ class _TerimaKasihState extends State<TerimaKasih> {
                         // fontFamily: 'Montserrat',
                         color: Colors.white,
                         // fontWeight: FontWeight.bold,
-                        fontSize: 20.0),
+                        fontSize: 18.0),
                   ),
                   color: Color.fromRGBO(90, 186, 146, 1),
                   onPressed: () {

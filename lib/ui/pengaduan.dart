@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 // import 'dart:io';
 
-import 'package:dumaskumham/model/pengaduanModel.dart';
+// import 'package:dumaskumham/model/pengaduanModel.dart';
 import 'package:dumaskumham/services/apiService.dart';
 import 'package:dumaskumham/ui/terimaKasih.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class Pengaduan extends StatefulWidget {
 class _PengaduanState extends State<Pengaduan> {
   ApiService _api = ApiService();
   bool _isLoading = false;
-  
+
   String nama = '';
   String jenisLaporan = '';
   String nip = '';
@@ -31,7 +31,7 @@ class _PengaduanState extends State<Pengaduan> {
   final controllerJenisPelanggaran = TextEditingController();
   final controllerDescPelanggaran = TextEditingController();
   final controllerDescLampiran = TextEditingController();
-  
+
   String _btn2SelectedVal;
   final items = {
     '1': 'Pelanggaran Disiplin Pegawai',
@@ -81,10 +81,12 @@ class _PengaduanState extends State<Pengaduan> {
       try {
         if (_multiPick) {
           _path = null;
-          _paths = await FilePicker.getMultiFilePath(type: _pickingType, fileExtension: _extension);
+          _paths = await FilePicker.getMultiFilePath(
+              type: _pickingType, fileExtension: _extension);
         } else {
           _paths = null;
-          _path = await FilePicker.getFilePath(type: _pickingType, fileExtension: _extension);
+          _path = await FilePicker.getFilePath(
+              type: _pickingType, fileExtension: _extension);
         }
       } on PlatformException catch (e) {
         print("Unsupported operation" + e.toString());
@@ -92,9 +94,43 @@ class _PengaduanState extends State<Pengaduan> {
       if (!mounted) return;
       setState(() {
         _loadingPath = false;
-        _fileName = _path != null ? _path.split('/').last : _paths != null ? _paths.keys.toString() : '...';
+        _fileName = _path != null
+            ? _path.split('/').last
+            : _paths != null ? _paths.keys.toString() : '...';
       });
     }
+  }
+
+  Future<void> _showAlert(String message) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+            // backgroundColor: Colors.black87,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(new Radius.circular(8.0))),
+            title: Text('Data Pelapor', style: TextStyle(color: Colors.black),),
+            // title: Text('Data Pelapor', style: TextStyle(color: Colors.white),),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(message, style: TextStyle(color: Colors.black),),
+                  // Text(message, style: TextStyle(color: Colors.white),),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('TUTUP', style: TextStyle(color: Colors.teal),),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          
+        );
+      },
+    );
   }
 
   @override
@@ -134,27 +170,27 @@ class _PengaduanState extends State<Pengaduan> {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 24,
+                      fontSize: 20,
                     )),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               TextField(
                 controller: controllerUnit,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   labelText: "Unit yang dilaporkan",
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 4.0),
+                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 2.0),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.teal.shade100, width: 4.0),
+                    borderSide:
+                        BorderSide(color: Colors.teal.shade100, width: 4.0),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
-                  labelStyle: TextStyle(color: Colors.black),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 13.0),
                   filled: true,
                   fillColor: Colors.white,
-                  
                 ),
               ),
               SizedBox(height: 10),
@@ -170,7 +206,7 @@ class _PengaduanState extends State<Pengaduan> {
                 ),
                 child: DropdownButton(
                   value: _btn2SelectedVal,
-                  hint: Text('Jenis Pelanggaran'),
+                  hint: Text('Jenis Pelanggaran', style: TextStyle(fontSize: 13.0)),
                   onChanged: ((String newValue) {
                     setState(() {
                       _btn2SelectedVal = newValue;
@@ -182,7 +218,7 @@ class _PengaduanState extends State<Pengaduan> {
                           (MapEntry<String, String> e) =>
                               DropdownMenuItem<String>(
                                 value: e.key,
-                                child: Text(e.value),
+                                child: Text(e.value, style: TextStyle(fontSize: 13.0)),
                               ))
                       .toList(),
                   // style: TextStyle(color: Colors.white),
@@ -203,56 +239,68 @@ class _PengaduanState extends State<Pengaduan> {
                 keyboardType: TextInputType.text,
                 maxLines: 3,
                 decoration: InputDecoration(
-                  labelText: "Deskripsi pelanggaran",
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 4.0),
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.teal.shade100, width: 4.0),
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  labelStyle: TextStyle(color: Colors.black),
-                  filled: true,
-                  fillColor: Colors.white
-                ),
+                    labelText: "Deskripsi pelanggaran",
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 2.0),
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.teal.shade100, width: 4.0),
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    labelStyle: TextStyle(color: Colors.black, fontSize: 13.0),
+                    filled: true,
+                    fillColor: Colors.white),
               ),
               SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                padding: const EdgeInsets.only(top: 0.0, bottom: 10.0),
                 child: new RaisedButton(
                   onPressed: () => _openFileExplorer(),
-                  child: new Text("File Lampiran"),
+                  child: new Text("File Lampiran", style: TextStyle(fontSize: 13.0),),
                 ),
               ),
               Builder(
                 builder: (BuildContext context) => _loadingPath
-                    ? Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: const CircularProgressIndicator()
-                    )
+                    ? Center(
+                        // padding: const EdgeInsets.only(left: 100.0, right: 100.0, bottom: ),
+                        child: CircularProgressIndicator())
                     : _path != null || _paths != null
                         ? new Container(
                             padding: const EdgeInsets.only(bottom: 10.0),
                             height: MediaQuery.of(context).size.height * 0.10,
                             child: new Scrollbar(
-                              child: new ListView.separated(
-                              itemCount: _paths != null && _paths.isNotEmpty ? _paths.length : 1,
+                                child: new ListView.separated(
+                              itemCount: _paths != null && _paths.isNotEmpty
+                                  ? _paths.length
+                                  : 1,
                               itemBuilder: (BuildContext context, int index) {
-                                final bool isMultiPath = _paths != null && _paths.isNotEmpty;
-                                final String name = 'File ${index+1} => ' +
-                                  (isMultiPath ? _paths.keys.toList()[index] : _fileName ?? '...');
-                                final path = 'Path ${index+1} => ' + 
-                                  (isMultiPath ? _paths.values.toList()[index].toString() : _path);
+                                final bool isMultiPath =
+                                    _paths != null && _paths.isNotEmpty;
+                                final String name = 'File ${index + 1} => ' +
+                                    (isMultiPath
+                                        ? _paths.keys.toList()[index]
+                                        : _fileName ?? '...');
+                                final path = 'Path ${index + 1} => ' +
+                                    (isMultiPath
+                                        ? _paths.values
+                                            .toList()[index]
+                                            .toString()
+                                        : _path);
                                 return new ListTile(
                                   title: new Text(
                                     name,
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.white, fontSize: 12.0),
                                   ),
-                                  subtitle: new Text(path, style: TextStyle(color: Colors.white),),
+                                  subtitle: new Text(
+                                    path,
+                                    style: TextStyle(color: Colors.white, fontSize: 12.0),
+                                  ),
                                 );
                               },
-                              separatorBuilder: (BuildContext context, int index) => new Divider(),
+                              separatorBuilder:
+                                  (BuildContext context, int index) =>
+                                      new Divider(),
                             )),
                           )
                         : new Container(),
@@ -264,17 +312,16 @@ class _PengaduanState extends State<Pengaduan> {
                 decoration: InputDecoration(
                   labelText: "Deskripsi lampiran",
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 4.0),
+                    borderSide: BorderSide(color: Colors.tealAccent.shade400, width: 2.0),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.teal.shade100, width: 4.0),
                     borderRadius: BorderRadius.circular(4.0),
                   ),
-                  labelStyle: TextStyle(color: Colors.black),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 13.0),
                   filled: true,
                   fillColor: Colors.white,
-
                 ),
               ),
               SizedBox(height: 10),
@@ -282,87 +329,48 @@ class _PengaduanState extends State<Pengaduan> {
               // Wrap(
               ButtonTheme(
                 minWidth: MediaQuery.of(context).size.width,
-                height: 50,
+                height: 40,
                 child: RaisedButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(4.0),
                       // side: BorderSide(color: Colors.red)
                     ),
                     // padding: EdgeInsets.symmetric(horizontal: 100.0, vertical: 14.0),
-                    child: _isLoading ? 
-                      SizedBox(
-                        height: 30.0,
-                        width: 30.0,
-                        child: CircularProgressIndicator(
-                          value: null,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      ) 
-                      : Text(
-                      'Lapor',
-                      style: TextStyle(
-                          // fontFamily: 'Montserrat',
-                          color: Colors.white,
-                          // fontWeight: FontWeight.bold,
-                          fontSize: 20.0),
-                    ),
+                    child: _isLoading
+                        ? SizedBox(
+                            height: 30.0,
+                            width: 30.0,
+                            child: CircularProgressIndicator(),
+                          )
+                        : Text(
+                            'Lapor',
+                            style: TextStyle(
+                                // fontFamily: 'Montserrat',
+                                color: Colors.white,
+                                // fontWeight: FontWeight.bold,
+                                fontSize: 18.0),
+                          ),
                     color: Color.fromRGBO(90, 186, 146, 1),
                     onPressed: () {
                       if (controllerUnit.text.trim().isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('Unit dilaporkan harus diisi'),
-                            );
-                          }
-                        );
+                        _showAlert('Unit dilaporkan harus diisi');
                       } else if (_btn2SelectedVal == null) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('Jenis pelanggaran harus dipilih'),
-                            );
-                          }
-                        );
+                        _showAlert('Jenis pelanggaran harus dipilih');
                       } else if (controllerDescPelanggaran.text.trim().isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('Deskripsi pelanggaran harus diisi'),
-                            );
-                          }
-                        );
+                        _showAlert('Deskripsi pelanggaran harus diisi');
                       } else if (_path == null) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('File lampiran harus diisi'),
-                            );
-                          }
-                        );
+                        _showAlert('File lampiran harus ada');  
                       } else if (controllerDescLampiran.text.trim().isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: Text('Deskripsi lampiran harus diisi'),
-                            );
-                          }
-                        );
+                        _showAlert('Deskripsi lampiran harus diisi');
                       } else {
-                        
-                        // setState(() => _isLoading = true);
+                        setState(() => _isLoading = true);
                         String unitDilaporkan = controllerUnit.text.trim();
                         String jenisPelanggaran = _btn2SelectedVal;
                         String deskripsiPelanggaran = controllerDescPelanggaran.text.trim();
                         File lampiran = File(_path);
                         String deskripsiLampiran = controllerDescLampiran.text.trim();
                         // PengaduanModel dataPengaduan = PengaduanModel(
-                        //   namaPelapor: nama.toString(), 
+                        //   namaPelapor: nama.toString(),
                         //   jenisLaporan: jenisLaporan.toString(),
                         //   nipNik: nip.toString(),
                         //   email: email.toString(),
@@ -375,9 +383,9 @@ class _PengaduanState extends State<Pengaduan> {
                         // );
 
                         // var map = new Map<String, dynamic>();
-                        // map["nama_pelapor"] = nama.toString(); 
-                        // map["jenis_laporan"] = jenisLaporan.toString(); 
-                        // map["nip_nik"] = nip.toString(); 
+                        // map["nama_pelapor"] = nama.toString();
+                        // map["jenis_laporan"] = jenisLaporan.toString();
+                        // map["nip_nik"] = nip.toString();
                         // map["email"] = email.toString();
                         // map["no_ponsel"] = noPonsel.toString();
                         // map["alamat_rumah"] = alamat.toString();
@@ -391,7 +399,7 @@ class _PengaduanState extends State<Pengaduan> {
                         // _api.kirimLaporan1(dataPengaduan).then((res) {
                         //   // print(res.toString());
                         // });
-                        
+
                         // _api.kirimLaporan(map).then((res) {
                         //   setState(() => _isLoading = false);
                         //   // print(dataPengaduan);
@@ -406,7 +414,7 @@ class _PengaduanState extends State<Pengaduan> {
                         //         fullscreenDialog: true,
                         //       ),
                         //     );
-                        //   } else { 
+                        //   } else {
                         //     showDialog(
                         //       context: context,
                         //       builder: (context) {
@@ -429,22 +437,25 @@ class _PengaduanState extends State<Pengaduan> {
                         // });
 
                         _api.kirimLaporan2(
-                          nama.toString(), 
-                          jenisLaporan.toString(), 
-                          nip.toString(), 
-                          email.toString(), 
-                          noPonsel.toString(), 
-                          alamat.toString(), 
-                          unitDilaporkan.toString(), 
-                          jenisPelanggaran.toString(), 
-                          deskripsiPelanggaran.toString(), 
-                          lampiran, 
-                          deskripsiLampiran.toString())
+                            nama.toString(),
+                            jenisLaporan.toString(),
+                            nip.toString(),
+                            email.toString(),
+                            noPonsel.toString(),
+                            alamat.toString(),
+                            unitDilaporkan.toString(),
+                            jenisPelanggaran.toString(),
+                            deskripsiPelanggaran.toString(),
+                            lampiran,
+                            deskripsiLampiran.toString())
                           .then((res) {
-                            res.stream.transform(utf8.decoder).listen((value) async {
+                            setState(() => _isLoading = false);
+                            res.stream
+                                .transform(utf8.decoder)
+                                .listen((value) async {
                               // var b = await json.decode(value);
                               print(value);
-                              Navigator.of(context).push(
+                              Navigator.of(context).pushReplacement(
                                 MaterialPageRoute<Null>(
                                   builder: (BuildContext context) {
                                     return TerimaKasih();
@@ -452,13 +463,10 @@ class _PengaduanState extends State<Pengaduan> {
                                   fullscreenDialog: true,
                                 ),
                               );
-                            });
+                          });
                         });
-
                       }
-                    }
-
-                  ),
+                    }),
               ),
               // ),
             ],
