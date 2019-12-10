@@ -1,4 +1,5 @@
 import 'package:dumaskumham/ui/dataDiri.dart';
+import 'package:dumaskumham/ui/start.dart';
 import 'package:flutter/material.dart';
 
 class TerimaKasih extends StatefulWidget {
@@ -65,7 +66,7 @@ class _TerimaKasihState extends State<TerimaKasih> {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute<Null>(
                         builder: (BuildContext context) {
-                          return DataDiri();
+                          return Start();
                         },
                       ),
                     );
