@@ -1,3 +1,4 @@
+import 'package:dumaskumham/ui/cariTicket.dart';
 import 'package:dumaskumham/ui/dataDiri.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,9 @@ class _StartState extends State<Start> {
                     fontSize: 18.0),
                 ),
                 color: Color.fromRGBO(90, 186, 146, 1),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CariTicket()));
+                },
               ),
             ),
             SizedBox(height: 10.0,),
