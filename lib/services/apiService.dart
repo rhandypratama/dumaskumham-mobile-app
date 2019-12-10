@@ -49,7 +49,7 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> getAllPembelajaran(String code) async {
+  Future<http.Response> getDetailTicket(String code) async {
     var response = await http.get(
       "$apiUrl/api/laporan/check?ticket_code=$code",
       // headers: {HttpHeaders.authorizationHeader: token, HttpHeaders.acceptHeader: "application/json"}
