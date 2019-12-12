@@ -8,7 +8,8 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
 
-  final String apiUrl = "http://dumas.docotel.net";
+  // final String apiUrl = "http://dumas.docotel.net";
+  final String apiUrl = "http://dumas.itjenkumham.co.id";
   final String apiKey = "SWYgd2UgY2FuIGRvIGl0IHRvbW9ycm93ID8ga2VuYXBhIGhhcnVzIHNla2FyYW5nID8=";
   
   // Future<http.Response> doLogin(Profile data) async {

@@ -122,19 +122,31 @@ class _CariTicketState extends State<CariTicket> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back_ios),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: Colors.teal,
+        title: Text('Pencarian Laporan Pengaduan'),
+      ),
       body: Container(
         color: Colors.teal,
-        padding: EdgeInsets.symmetric(vertical: 25, horizontal: 10.0),
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10.0),
         width: MediaQuery.of(context).size.width,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 25),
+            // Icon(Icons.arrow_back_ios),
+            // SizedBox(height: 25),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
                   height: 50.0,
-                  width: 260.0,
+                  width: 270.0,
                   child: Theme(
                     data: ThemeData(
                       primaryColor: Colors.white,

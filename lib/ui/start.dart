@@ -18,6 +18,14 @@ class _StartState extends State<Start> {
         padding: EdgeInsets.symmetric(vertical: 200.0, horizontal: 40.0),
         child: ListView(
           children: <Widget>[
+            Center(
+              child: Image.asset(
+                "assets/images/kumham.png",
+                fit: BoxFit.cover,
+                width: MediaQuery.of(context).size.width - 300,
+              ),
+            ),
+            SizedBox(height: 30.0),
             ButtonTheme(
               minWidth: MediaQuery.of(context).size.width,
               height: 40,
