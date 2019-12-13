@@ -17,22 +17,12 @@ class Pengaduan extends StatefulWidget {
 }
 
 class _PengaduanState extends State<Pengaduan> {
-  ApiService _api = ApiService();
-  bool _isLoading = false;
-
-  String nama = '';
-  String jenisLaporan = '';
-  String nip = '';
-  String email = '';
-  String noPonsel = '';
   String alamat = '';
-
-  final controllerUnit = TextEditingController();
-  final controllerJenisPelanggaran = TextEditingController();
-  final controllerDescPelanggaran = TextEditingController();
   final controllerDescLampiran = TextEditingController();
-
-  String _btn2SelectedVal;
+  final controllerDescPelanggaran = TextEditingController();
+  final controllerJenisPelanggaran = TextEditingController();
+  final controllerUnit = TextEditingController();
+  String email = '';
   final items = {
     '1': 'Pelanggaran Disiplin Pegawai',
     '2': 'Penyalahgunaan Wewenang, Mal Administrasi dan Kekerasan Dalam Rumah Tangga',
@@ -43,6 +33,38 @@ class _PengaduanState extends State<Pengaduan> {
     '7': 'Narkoba',
     '8': 'Pelayanan Publik',
   };
+
+  String jenisLaporan = '';
+  String nama = '';
+  String nip = '';
+  String noPonsel = '';
+
+  ApiService _api = ApiService();
+  String _btn2SelectedVal;
+  String _extension;
+  String _fileName;
+  bool _hasValidMime = false;
+  bool _isLoading = false;
+  bool _loadingPath = false;
+  bool _multiPick = false;
+  String _path;
+  Map<String, String> _paths;
+  FileType _pickingType;
+
+  @override
+  void dispose() {
+    controllerUnit.dispose();
+    controllerJenisPelanggaran.dispose();
+    controllerDescPelanggaran.dispose();
+    controllerDescLampiran.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getDataDiri();
+  }
 
   _getDataDiri() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -65,14 +87,6 @@ class _PengaduanState extends State<Pengaduan> {
     // );
   }
 
-  String _fileName;
-  String _path;
-  Map<String, String> _paths;
-  String _extension;
-  bool _loadingPath = false;
-  bool _multiPick = false;
-  bool _hasValidMime = false;
-  FileType _pickingType;
   // TextEditingController _controller = new TextEditingController();
 
   void _openFileExplorer() async {
@@ -131,21 +145,6 @@ class _PengaduanState extends State<Pengaduan> {
         );
       },
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _getDataDiri();
-  }
-
-  @override
-  void dispose() {
-    controllerUnit.dispose();
-    controllerJenisPelanggaran.dispose();
-    controllerDescPelanggaran.dispose();
-    controllerDescLampiran.dispose();
-    super.dispose();
   }
 
   @override
